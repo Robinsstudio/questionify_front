@@ -1,0 +1,82 @@
+* {
+	margin: 0;
+	padding: 0;
+	user-select: none;
+	box-sizing: border-box;
+}
+
+#explorer {
+	width: 100vw;
+	height: 100vh;
+}
+
+#files {
+	position: relative;
+	display: flex;
+	align-content: flex-start;
+	flex-wrap: wrap;
+	height: 95%;
+	overflow: auto;
+}
+
+.file, .folder {
+	width: 100px;
+	height: 100px;
+	margin: 25px;
+	white-space: nowrap;
+
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.file:hover, .folder:hover {
+	opacity: .5;
+}
+
+.folder {
+	background-image: url("https://image.flaticon.com/icons/svg/148/148953.svg");
+}
+
+.file {
+	background-image: url("https://image.flaticon.com/icons/svg/148/148967.svg");
+}
+
+.fileName {
+	position: relative;
+	top: 100%;
+	transform: translateY(0%);
+}
+
+.fileName > * {
+	display: inline-block;
+	position: relative;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+#path {
+	position: sticky;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 0;
+	height: 5%;
+	background-color: #dbdbdb;
+	z-index: 100;
+}
+
+#path > div {
+	width: 25px;
+	height: 25px;
+	
+	background-image: url("https://image.flaticon.com/icons/svg/118/118740.svg");
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat
+}
+
+#path > span:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}

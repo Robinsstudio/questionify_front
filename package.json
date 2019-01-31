@@ -1,0 +1,21 @@
+{
+  "name": "questionify",
+  "version": "1.0.0",
+  "description": "Simple as questions and answers",
+  "main": "index.js",
+  "dependencies": {
+    "bluebird": "^3.5.3",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Robin Dos Anjos",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Robinsstudio/questionify.git"
+  }
+}
