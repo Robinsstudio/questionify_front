@@ -1,3 +1,6 @@
+import React, { Component } from 'react';
+import File from './File';
+
 const request = (url, body) => {
 	return fetch(url, {
 		method: 'POST',
@@ -6,9 +9,7 @@ const request = (url, body) => {
 	});
 }
 
-const requestJSON = (url, body) => request(url, body).then(res => res.json());
-
-class ExplorerView extends React.Component {
+class ExplorerView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -22,7 +23,7 @@ class ExplorerView extends React.Component {
 	}
 	
 	requestFolder(folder = this.state.folder) {
-		requestJSON('FolderRequest', { folder }).then( ({folder, files}) => this.setState({folder, files}) );
+		request('FolderRequest', { folder }).then(res => res.json()).then( ({folder, files}) => this.setState({folder, files}) );
 	}
 
 	goBack(howMany) {
@@ -55,28 +56,4 @@ class ExplorerView extends React.Component {
 	}
 }
 
-class File extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.open = this.open.bind(this);
-	}
-
-	open() {
-		const { requestFolder, folder, file } = this.props;
-		if (file.type === 'folder') {
-			requestFolder(folder.concat(file.name));
-		}
-	}
-
-	render() {
-		const { type, name } = this.props.file;
-		return (
-			<div className={type} onDoubleClick={this.open}>
-				<div className='fileName'><span>{name}</span></div>
-			</div>
-		);
-	}
-}
-
-ReactDOM.render(<ExplorerView/>, document.getElementById('app-root'));
+export default ExplorerView;
