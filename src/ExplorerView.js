@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import File from './File';
-
-const request = (url, body) => {
-	return fetch(url, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(body)
-	});
-}
+import ContextMenu from './ContextMenu';
+import Modals from './Modals';
+import request from './request';
 
 class ExplorerView extends Component {
 	constructor(props) {
@@ -15,11 +10,20 @@ class ExplorerView extends Component {
 		this.state = {
 			folder: [],
 			files: [],
+			contextMenu: {}
 		};
 
+		this.createFolder = this.createFolder.bind(this);
+		this.requestFolder = this.requestFolder.bind(this);
+		this.handleContextMenu = this.handleContextMenu.bind(this);
+		this.hideContextMenu = this.hideContextMenu.bind(this);
 		this.requestFolder = this.requestFolder.bind(this);
 		
 		this.requestFolder();
+	}
+
+	createFolder(name) {
+		request('FolderCreate', { folder: this.state.folder.concat(name) }).then( () => this.requestFolder() );
 	}
 	
 	requestFolder(folder = this.state.folder) {
@@ -30,13 +34,37 @@ class ExplorerView extends Component {
 		const folder = this.state.folder;
 		this.requestFolder( (howMany <= folder.length) ? folder.slice(0, folder.length - howMany) : folder );
 	}
+
+	handleContextMenu(event, items = []) {
+		const { pageX, pageY, screenX, screenY } = event;
+		const x = screenX - window.screenX;
+		const y = screenY - window.screenY;
+		const offset = { x: pageX - x, y: pageY - y };
+		this.setState({ contextMenu: { visible: true, x, y, offset, items: this.buildMenuItems(items), onClick: this.hideContextMenu } });
+		event.stopPropagation();
+		event.preventDefault();
+	}
+
+	buildMenuItems(items) {
+		return items.concat(
+			{ label: 'Nouveau dossier', onClick: () => {
+				Modals.showPromptModal('Nouveau dossier', 'Entrez un nom de dossier ici...').then(name => this.createFolder(name)).catch(() => {});
+			}},
+			{ label: 'Nouvelle question', onClick: () => console.log('Nouvelle question') }
+		);
+	}
+
+	hideContextMenu() {
+		this.setState({ contextMenu: { visible: false } });
+	}
   
 	buildFileItem(file) {
-		const { requestFolder, state: { folder } } = this;
-		return React.createElement(File, { folder, file, requestFolder });
+		const { requestFolder, handleContextMenu, state: { folder } } = this;
+		return React.createElement(File, { folder, file, requestFolder, handleContextMenu });
 	}
 	
 	render() {
+		const { contextMenu } = this.state;
 		return (
 			<div id='explorer'>
 				<div id='path'>
@@ -48,9 +76,11 @@ class ExplorerView extends Component {
 					})).slice(0, -1)}
 				</div>
 
-				<div id='files'>
+				<div id='files' onClick={this.hideContextMenu}  onContextMenu={this.handleContextMenu}>
 					{this.state.files.map(file => this.buildFileItem(file))}
 				</div>
+
+				{contextMenu.visible && <ContextMenu {...contextMenu}/>}
 			</div>
 		);
 	}

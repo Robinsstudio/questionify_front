@@ -80,3 +80,19 @@
 	cursor: pointer;
 	text-decoration: underline;
 }
+
+#contextMenu {
+	position: absolute;
+	border: 1px #aaaaaa solid;
+	background-color: white;
+	z-index: 10;
+}
+
+#contextMenu > div {
+	color: #333;
+	padding: 5px;
+}
+
+#contextMenu > div:hover {
+	background-color: #ebebeb;
+}
