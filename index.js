@@ -6,21 +6,35 @@ const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 
 const cloud = 'cloud';
-const public = 'public';
 
-app.use(bodyParser.json())
+const handleError = (error, response) => {
+	console.log(error);
+	response.status(500).end();
+}
 
-.post(/FolderRequest/, async (req, res) => {
-	res.json(await getFolder(req.body.folder));
-})
+app.use(bodyParser.json());
 
-.get(/.*/, (req, res) => {
-	res.sendFile(decodeURIComponent(req.url), {root: join(__dirname, public)}, err => {
-		if (err) {
-			res.send("Error 404 - Page not found");
-		}
-	});
-})
+app.post(/FolderRequest/, (req, res) => {
+	const { body: { folder } } = req;
+	getFolder(folder).then(fold => res.json(fold)).catch( (err) => handleError(err, res) );
+});
+
+app.post(/FolderCreate/, (req, res) => {
+	const { body: { folder } } = req;
+	createFolder(folder).then( () => res.status(200).end() ).catch( (err) => handleError(err, res) );
+});
+
+app.post(/FileRename/, (req, res) => {
+	const { body: { folder, file, name } } = req;
+	renameFile(folder, file, name).then( () => res.status(200).end() ).catch( (err) => handleError(err, res) );
+});
+
+app.post(/FileRemove/, (req, res) => {
+	const { body: { file, folder } } = req;
+	removeFile(folder, file).then( () => res.status(200).end() ).catch( (err) => handleError(err, res) );
+});
+
+const createFolder = (folder) => fs.mkdirAsync(join(cloud, ...folder))
 
 const getFolder = async (folder = []) => {
 	return {
@@ -30,5 +44,18 @@ const getFolder = async (folder = []) => {
 		}))
 	}
 }
+
+const removeFile = (folder, file) => removeFileRecursive(join(cloud, ...folder, file));
+
+const removeFileRecursive = async (file) => {
+	if ((await fs.lstatAsync(file)).isDirectory()) {
+		await Promise.all((await fs.readdirAsync(file)).map(async(sub) => await removeFileRecursive(join(file, sub))))
+		await fs.rmdirAsync(file);
+	} else {
+		await fs.unlinkAsync(file);
+	}
+}
+
+const renameFile = (folder, file, name) => fs.renameAsync(join(cloud, ...folder, file), join(cloud, ...folder, name));
 
 http.listen(8080);
