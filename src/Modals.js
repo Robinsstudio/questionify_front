@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PromptModal from './PromptModal';
 import ConfirmModal from './ConfirmModal';
+import QuestionModal from './QuestionModal';
 
 class Modals extends Component {
 	constructor(props) {
@@ -8,11 +9,19 @@ class Modals extends Component {
 		this.state = {
 			promptModal: {},
 			confirmModal: {},
+			questionModal: {
+				data: {
+					question: '',
+					answers: [],
+				}
+			}
 		};
 
 		this.updatePromptModal = this.updatePromptModal.bind(this);
 		this.hidePromptModal = this.hidePromptModal.bind(this);
 		this.hideConfirmModal = this.hideConfirmModal.bind(this);
+		this.updateQuestionModal = this.updateQuestionModal.bind(this);
+		this.hideQuestionModal = this.hideQuestionModal.bind(this)
 	}
 
 	showPromptModal(title, placeholder, promise) {
@@ -41,8 +50,25 @@ class Modals extends Component {
 		});
 	}
 
+	showQuestionModal(data, promise) {
+		const code = data.code || 'public class Main {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello world!");\n\t}\n}';
+		this.setState({ questionModal: { open: true, data: { ...data, code, type: 'question' }, promise } });
+	}
+
+	updateQuestionModal(data) {
+		this.setState((state) => {
+			return { questionModal: { ...state.questionModal, data } };
+		});
+	}
+
+	hideQuestionModal() {
+		this.setState((state) => {
+			return { questionModal: { ...state.questionModal, open: false } };
+		});
+	}
+
 	render() {
-		const { promptModal, confirmModal } = this.state;
+		const { promptModal, confirmModal, questionModal } = this.state;
 		return (
 			<Fragment>
 				<PromptModal
@@ -52,6 +78,11 @@ class Modals extends Component {
 
 				<ConfirmModal
 					open={confirmModal.open} title={confirmModal.title} body={confirmModal.body} hide={this.hideConfirmModal} promise={confirmModal.promise}
+				/>
+
+				<QuestionModal
+					open={questionModal.open} data={questionModal.data} update={this.updateQuestionModal} 
+					hide={this.hideQuestionModal} promise={questionModal.promise}
 				/>
 			</Fragment>
 		);
@@ -65,4 +96,5 @@ export default {
 	get: () => modals,
 	showPromptModal: (title, placeholder) => new Promise((resolve, reject) => component.showPromptModal(title, placeholder, { resolve, reject })),
 	showConfirmModal: (title, body) => new Promise((resolve, reject) => component.showConfirmModal(title, body, { resolve, reject })),
+	showQuestionModal: (data) => new Promise((resolve, reject) => component.showQuestionModal(data, { resolve, reject }))
 }

@@ -17,9 +17,13 @@ class File extends Component {
 	}
 
 	open() {
-		const { requestFolder, folder, file: { type, name } } = this.props;
+		const { requestFolder, folder, file: { type, name, data } } = this.props;
 		if (type === 'folder') {
 			requestFolder(folder.concat(name));
+		} else if (type === 'question') {
+			Modals.showQuestionModal({ ...data, name }).then(quest => {
+				request('QuestionSave', { folder, file: quest.name, question: JSON.stringify(quest) }).then( () => requestFolder() );
+			}).catch(() => {});
 		}
 	}
 
