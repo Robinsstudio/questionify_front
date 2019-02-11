@@ -46,11 +46,14 @@ class ExplorerView extends Component {
 	}
 
 	buildMenuItems(items) {
+		const { folder } = this.state;
 		return items.concat(
 			{ label: 'Nouveau dossier', onClick: () => {
 				Modals.showPromptModal('Nouveau dossier', 'Entrez un nom de dossier ici...').then(name => this.createFolder(name)).catch(() => {});
 			}},
-			{ label: 'Nouvelle question', onClick: () => console.log('Nouvelle question') }
+			{ label: 'Nouvelle question', onClick: () => Modals.showQuestionModal({ question: '', answers: [] }).then(quest => {
+				request('QuestionSave', { folder, file: quest.name, question: JSON.stringify(quest) }).then( () => this.requestFolder() );
+			}).catch(() => {}) }
 		);
 	}
 

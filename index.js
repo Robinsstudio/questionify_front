@@ -34,13 +34,22 @@ app.post(/FileRemove/, (req, res) => {
 	removeFile(folder, file).then( () => res.status(200).end() ).catch( (err) => handleError(err, res) );
 });
 
+app.post(/QuestionSave/, (req, res) => {
+	const { body: { folder, file, question } } = req;
+	saveQuestion(folder, file, question).then( () => res.status(200).end() ).catch( (err) => handleError(err, res) );
+})
+
 const createFolder = (folder) => fs.mkdirAsync(join(cloud, ...folder))
 
-const getFolder = async (folder = []) => {
+const getFolder = async (folder) => {
 	return {
 		folder,
 		files: await Promise.all((await fs.readdirAsync(join(cloud, ...folder))).map(async(name) => {
-			return {name: name, type: ((await fs.lstatAsync(join(cloud, ...folder, name))).isDirectory() ? 'folder' : 'file')};
+			if ((await fs.lstatAsync(join(cloud, ...folder, name))).isDirectory()) {
+				return { name, type: 'folder' };
+			}
+			const data = JSON.parse(await fs.readFileAsync(join(cloud, ...folder, name)));
+			return { name, type: data.type, data };
 		}))
 	}
 }
@@ -57,5 +66,7 @@ const removeFileRecursive = async (file) => {
 }
 
 const renameFile = (folder, file, name) => fs.renameAsync(join(cloud, ...folder, file), join(cloud, ...folder, name));
+
+const saveQuestion = (folder, file, question) => fs.writeFileAsync(join(cloud, ...folder, file), question);
 
 http.listen(8080);

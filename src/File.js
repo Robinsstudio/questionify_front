@@ -17,9 +17,13 @@ class File extends Component {
 	}
 
 	open() {
-		const { requestFolder, folder, file: { type, name } } = this.props;
+		const { requestFolder, folder, file: { type, name, data } } = this.props;
 		if (type === 'folder') {
 			requestFolder(folder.concat(name));
+		} else if (type === 'question') {
+			Modals.showQuestionModal({ ...data, name }).then(quest => {
+				request('QuestionSave', { folder, file: quest.name, question: JSON.stringify(quest) }).then( () => requestFolder() );
+			}).catch(() => {});
 		}
 	}
 
@@ -45,9 +49,9 @@ class File extends Component {
 	}
 
 	handleContextMenu(event) {
-		const { folder, file: { name }, requestFolder } = this.props;
+		const { name } = this.props.file;
 		this.props.handleContextMenu(event, [
-			{ label: 'Ouvrir', onClick: () => requestFolder(folder.concat(name)) },
+			{ label: 'Ouvrir', onClick: this.open },
 			{ label: 'Renommer', onClick: this.startRenaming },
 			{ label: 'Supprimer', onClick: () => Modals.showConfirmModal('Supprimer', `Voulez-vous vraiment supprimer ${name} ?`).then(this.remove).catch(() => {}) }
 		]);
