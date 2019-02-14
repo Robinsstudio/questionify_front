@@ -19,7 +19,7 @@
 	overflow: auto;
 }
 
-.file, .folder {
+.file, .folder, .question {
 	width: 100px;
 	height: 100px;
 	margin: 25px;
@@ -30,7 +30,7 @@
 	background-repeat: no-repeat;
 }
 
-.file:hover, .folder:hover {
+.file:hover, .folder:hover, .question:hover {
 	opacity: .5;
 }
 
@@ -40,6 +40,10 @@
 
 .file {
 	background-image: url("https://image.flaticon.com/icons/svg/148/148967.svg");
+}
+
+.question {
+	background-image: url("question.png");
 }
 
 .fileName {
