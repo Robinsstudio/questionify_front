@@ -22,19 +22,19 @@ class File extends Component {
 			requestFolder(folder.concat(name));
 		} else if (type === 'question') {
 			Modals.showQuestionModal({ ...data, name }).then(quest => {
-				request('QuestionSave', { folder, file: quest.name, question: JSON.stringify(quest) }).then( () => requestFolder() );
+				request('FileSave', { file: folder.concat(quest.name), json: JSON.stringify(quest) }).then( () => requestFolder() );
 			}).catch(() => {});
 		}
 	}
 
 	remove() {
 		const { requestFolder, folder, file: { name } } = this.props;
-		request('FileRemove', { folder, file: name }).then( () => requestFolder() );
+		request('FileRemove', { file: folder.concat(name) }).then( () => requestFolder() );
 	}
 
 	rename(name) {
 		const { requestFolder, folder, file } = this.props;
-		request('FileRename', { folder, file: file.name, name }).then( () => requestFolder() );
+		request('FileRename', { file: folder.concat(file.name), name }).then( () => requestFolder() );
 	}
 
 	startRenaming() {
