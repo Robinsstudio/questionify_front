@@ -1,0 +1,1 @@
+{"question":"Question 1","answers":[{"answer":"Réponse 1","correct":false},{"answer":"Réponse 2","correct":true},{"answer":"Réponse 3","correct":false}],"code":"public class Personne {\n\tprivate String nom;\n\tprivate String prenom;\n}\n\npublic class Etudiant extends Personne {\n\tprivate String numeroEtudiant;\n}","type":"question","expand":true,"name":"Etudiant"}
