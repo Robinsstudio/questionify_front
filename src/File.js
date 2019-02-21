@@ -14,27 +14,30 @@ class File extends Component {
 		this.startRenaming = this.startRenaming.bind(this);
 		this.stopRenaming = this.stopRenaming.bind(this);
 		this.handleContextMenu = this.handleContextMenu.bind(this);
+		this.handleDragStart = this.handleDragStart.bind(this);
 	}
 
 	open() {
-		const { requestFolder, folder, file: { type, name, data } } = this.props;
+		const { edit, requestFolder, refresh, folder, file: { type, name, data } } = this.props;
 		if (type === 'folder') {
 			requestFolder(folder.concat(name));
 		} else if (type === 'question') {
 			Modals.showQuestionModal({ ...data, name }).then(quest => {
-				request('FileSave', { file: folder.concat(quest.name), json: JSON.stringify(quest) }).then( () => requestFolder() );
+				request('FileSave', { file: folder.concat(quest.name), json: JSON.stringify(quest) }).then( () => refresh() );
 			}).catch(() => {});
+		} else if (type === 'qcm') {
+			edit(data.questions, folder.concat(name));
 		}
 	}
 
 	remove() {
-		const { requestFolder, folder, file: { name } } = this.props;
-		request('FileRemove', { file: folder.concat(name) }).then( () => requestFolder() );
+		const { refresh, folder, file } = this.props;
+		request('FileRemove', { file: folder.concat(file.name) }).then( () => refresh() );
 	}
 
 	rename(name) {
-		const { requestFolder, folder, file } = this.props;
-		request('FileRename', { file: folder.concat(file.name), name }).then( () => requestFolder() );
+		const { refresh, folder, file } = this.props;
+		request('FileRename', { file: folder.concat(file.name), name }).then( () => refresh() );
 	}
 
 	startRenaming() {
@@ -57,10 +60,17 @@ class File extends Component {
 		]);
 	}
 
+	handleDragStart(event) {
+		const { folder, file: { name, type, data} } = this.props;
+		if (type === 'question') {
+			event.dataTransfer.setData('question', JSON.stringify({ ...data, file: folder.concat(name) }));
+		}
+	}
+
 	render() {
 		const { props: { file: { type, name } }, state: { renaming } } = this;
 		return (
-			<div className={type} onDoubleClick={this.open} onContextMenu={this.handleContextMenu}>
+			<div className={type} onDoubleClick={this.open} onContextMenu={this.handleContextMenu} onDragStart={this.handleDragStart} draggable>
 				<div className='fileName'>
 					{(renaming) ? <AutoFocusInput value={name} onStopEditing={this.stopRenaming}/> : <span>{name}</span>}
 				</div>
