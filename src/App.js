@@ -79,7 +79,7 @@ class App extends Component {
 		return (
 			<div id="app">
 				<ExplorerView editing={editor.visible} folder={folder} files={files} requestFolder={this.requestFolder} create={this.create} edit={this.edit} refresh={this.refresh}/>
-				<Editor editor={editor} folder={folder} update={this.updateEditor} save={this.save} closeEditor={this.closeEditor}/>
+				{/*<Editor editor={editor} folder={folder} update={this.updateEditor} save={this.save} closeEditor={this.closeEditor}/>*/}
 				{Modals.get()}
 			</div>
 		);

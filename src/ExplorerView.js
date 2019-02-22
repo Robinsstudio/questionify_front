@@ -64,7 +64,7 @@ class ExplorerView extends Component {
 		const { props: { editing }, state: { contextMenu } } = this;
 		return (
 			<div id='explorer' className={editing ? 'editing' : ''}>
-				<div id='path'>
+				<div id='path' className="header">
 					{[].concat(...['Explorer', ...this.props.folder].map((folder, index, self) => {
 						return [
 							<span onClick={() => this.goBack(self.length - index - 1)}>{folder}</span>,

@@ -1,0 +1,103 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+#explorer {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: 10 0;
+	min-height: 50px;
+	background-color: #dbdbdb;
+}
+
+#path > div {
+	width: 25px;
+	height: 25px;
+	
+	background-image: url("https://image.flaticon.com/icons/svg/118/118740.svg");
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat
+}
+
+#path > span:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+#files {
+	flex: 90 0;
+	margin: 5px;
+	overflow: auto;
+}
+
+#files.list {
+	display: grid;
+	grid-template-columns: 33% 33% 33%;
+	grid-template-rows: repeat(auto-fill, 30px);
+	grid-gap: 5px;
+}
+
+.file {
+	position: relative;
+	float: left;
+	margin: 25px;
+	white-space: nowrap;
+}
+
+.file:hover {
+	opacity: .5;
+}
+
+.list .file {
+	float: none;
+	margin: 0px;
+}
+
+.folder, .question, .qcm {
+	width: 100px;
+	height: 100px;
+
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.list .folder, .list .question, .list .qcm {
+	width: 30px;
+	height: 30px;
+}
+
+.folder {
+	background-image: url("https://image.flaticon.com/icons/svg/148/148953.svg");
+}
+
+.question {
+	background-image: url("question.png");
+}
+
+.qcm {
+	background-image: url("qcm.png");
+}
+
+.fileName {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 100;
+}
+
+.list .fileName {
+	left: 0%;
+	top: 50%;
+	margin-left: 35px;
+	transform: translateY(-50%);
+}
