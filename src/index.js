@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './global.css';
 import './explorer.css';
+import './menu.css'
+import './editor.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 

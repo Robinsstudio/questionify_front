@@ -75,8 +75,8 @@ class Editor extends Component {
 	render() {
 		const { editor, closeEditor } = this.props;
 		return (
-			<div id="editor" className={editor.visible ? 'editing' : ''}>
-				<div id="header" className="mb-3">
+			<div id="editor" className={`view ${editor.visible ? 'editing' : ''}`}>
+				<div id="editorHeader" className="header">
 					<span className="ml-3">Éditer un QCM</span>
 					<div id="buttons" className="mr-3">
 						<Button color="primary" className="mr-2" onClick={this.save}>Enregistrer</Button>
@@ -84,7 +84,7 @@ class Editor extends Component {
 					</div>
 				</div>
 
-				<div id="questions">
+				<div id="questions" className="scrollable">
 					{editor.questions.map((quest, index) => {
 						return [
 							this.buildDropZone(index),

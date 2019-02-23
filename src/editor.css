@@ -1,0 +1,26 @@
+#editor {
+	width: 0vw;
+}
+
+#editorHeader {
+    justify-content: space-between;
+    white-space: nowrap;
+}
+
+#questions {
+	display: flex;
+	flex-direction: column;
+}
+
+.separator {
+	min-height: 20px;
+}
+
+.stretch {
+	flex-grow: 1;
+}
+
+.dropZone {
+	border: 1px blue dotted;
+	background-color: rgba(98, 156, 201, .5);
+}

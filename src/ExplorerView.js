@@ -63,8 +63,8 @@ class ExplorerView extends Component {
 	render() {
 		const { props: { editing }, state: { contextMenu } } = this;
 		return (
-			<div id='explorer' className={editing ? 'editing' : ''}>
-				<div id='path' className="header">
+			<div id="explorer" className={`view ${editing ? 'editing' : ''}`}>
+				<div id="path" className="header">
 					{[].concat(...['Explorer', ...this.props.folder].map((folder, index, self) => {
 						return [
 							<span onClick={() => this.goBack(self.length - index - 1)}>{folder}</span>,
@@ -73,7 +73,7 @@ class ExplorerView extends Component {
 					})).slice(0, -1)}
 				</div>
 
-				<div id='files' onClick={this.hideContextMenu} onContextMenu={this.handleContextMenu}>
+				<div className="scrollable" onClick={this.hideContextMenu} onContextMenu={this.handleContextMenu}>
 					{this.props.files.map(file => this.buildFileItem(file))}
 				</div>
 

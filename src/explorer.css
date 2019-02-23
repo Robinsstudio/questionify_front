@@ -3,21 +3,6 @@
 	padding: 0;
 }
 
-#explorer {
-	display: flex;
-	flex-direction: column;
-	height: 100vh;
-}
-
-.header {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex: 10 0;
-	min-height: 50px;
-	background-color: #dbdbdb;
-}
-
 #path > div {
 	width: 25px;
 	height: 25px;
@@ -33,13 +18,7 @@
 	text-decoration: underline;
 }
 
-#files {
-	flex: 90 0;
-	margin: 5px;
-	overflow: auto;
-}
-
-#files.list {
+.list {
 	display: grid;
 	grid-template-columns: 33% 33% 33%;
 	grid-template-rows: repeat(auto-fill, 30px);
