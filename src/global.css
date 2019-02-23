@@ -22,13 +22,12 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	flex: 10 0;
 	min-height: 50px;
 	background-color: #dbdbdb;
 }
 
 .scrollable {
-	flex: 90 0;
+	flex: 1 0;
 	padding: 5px;
 	overflow: auto;
 }

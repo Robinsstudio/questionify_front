@@ -1,21 +1,53 @@
 * {
 	margin: 0;
 	padding: 0;
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
 }
 
-#path > div {
+#explorerHeader {
+	position: relative;
+}
+
+#path {
+	display: flex;
+}
+
+#path > .arrow {
 	width: 25px;
 	height: 25px;
 	
 	background-image: url("https://image.flaticon.com/icons/svg/118/118740.svg");
-	background-position: center;
-	background-size: contain;
-	background-repeat: no-repeat
 }
 
 #path > span:hover {
 	cursor: pointer;
 	text-decoration: underline;
+}
+
+#displayBy {
+	position: absolute;
+	display: flex;
+	right: 0;
+}
+
+#icons, #list {
+	width: 30px;
+	height: 30px;
+	margin: 5px;
+}
+
+.negative {
+	filter: invert(1);
+}
+
+#icons {
+	background-image: url("icons.png");
+}
+
+#list {
+	background-image: url("list.png");
 }
 
 .list {
@@ -44,10 +76,6 @@
 .folder, .question, .qcm {
 	width: 100px;
 	height: 100px;
-
-	background-position: center;
-	background-size: contain;
-	background-repeat: no-repeat;
 }
 
 .list .folder, .list .question, .list .qcm {
