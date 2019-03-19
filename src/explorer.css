@@ -114,3 +114,8 @@
 	transform: translateY(-50%);
 	text-align: start;
 }
+
+.fileName > input {
+	width: 200px;
+	outline: none;
+}

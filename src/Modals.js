@@ -11,7 +11,7 @@ class Modals extends Component {
 			confirmModal: {},
 			questionModal: {
 				data: {
-					question: '',
+					label: '',
 					answers: [],
 				}
 			}
