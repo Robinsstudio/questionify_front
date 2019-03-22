@@ -1,0 +1,116 @@
+#explorerHeader {
+	position: relative;
+}
+
+#path {
+	display: flex;
+}
+
+#path > .arrow {
+	width: 25px;
+	height: 25px;
+	
+	background-image: url("https://image.flaticon.com/icons/svg/118/118740.svg");
+}
+
+#path > span:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+#displayBy {
+	position: absolute;
+	display: flex;
+	right: 0;
+}
+
+#icons, #list {
+	width: 30px;
+	height: 30px;
+	margin: 5px;
+}
+
+.negative {
+	filter: invert(1);
+}
+
+#icons {
+	background-image: url("icons.png");
+}
+
+#list {
+	background-image: url("list.png");
+}
+
+.list {
+	display: grid;
+	grid-template-columns: 30% 30% 30%;
+	grid-template-rows: repeat(auto-fill, 30px);
+	grid-gap: 5px;
+}
+
+.file {
+	position: relative;
+	float: left;
+	padding: 20px;
+	margin: 5px;
+	white-space: nowrap;
+}
+
+.file:hover:not(.renaming) {
+	opacity: .5;
+}
+
+.list .file {
+	float: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+.folder, .question, .qcm {
+	width: 100px;
+	height: 100px;
+}
+
+.list .folder, .list .question, .list .qcm {
+	width: 30px;
+	height: 30px;
+}
+
+.folder {
+	background-image: url("https://image.flaticon.com/icons/svg/148/148953.svg");
+}
+
+.question {
+	background-image: url("question.png");
+}
+
+.qcm {
+	background-image: url("qcm.png");
+}
+
+.fileName {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100%;
+	z-index: 100;
+	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.renaming .fileName {
+	width: auto;
+	overflow: visible;
+	z-index: 1000;
+}
+
+.list .fileName {
+	left: 0%;
+	top: 50%;
+	padding-left: 35px;
+	transform: translateY(-50%);
+	text-align: start;
+}

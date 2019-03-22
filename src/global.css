@@ -1,0 +1,41 @@
+* {
+	margin: 0;
+	padding: 0;
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+#app {
+	display: flex;
+	overflow: hidden;
+	user-select: none;
+}
+
+.view {
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+	border: 5px solid #dbdbdb;
+	transition: width .5s;
+}
+
+#explorer.editing, #editor.editing {
+	width: 50vw;
+	transition: width .5s;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 50px;
+	background-color: #dbdbdb;
+}
+
+.scrollable {
+	flex: 1 0;
+	padding: 5px;
+	overflow: auto;
+}

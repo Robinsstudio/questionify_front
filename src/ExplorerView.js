@@ -8,7 +8,8 @@ class ExplorerView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			contextMenu: { visible: false }
+			contextMenu: { visible: false },
+			displayByList: false
 		};
 
 		this.createFolder = this.createFolder.bind(this);
@@ -59,21 +60,32 @@ class ExplorerView extends Component {
 		const { handleContextMenu, props: { folder, edit, requestFolder, refresh } } = this;
 		return <File folder={folder} file={file} edit={edit} requestFolder={requestFolder} refresh={refresh} handleContextMenu={handleContextMenu}/>
 	}
+
+	toggleDisplay(displayByList) {
+		this.setState({ displayByList });
+	}
 	
 	render() {
-		const { props: { editing }, state: { contextMenu } } = this;
+		const { props: { editing }, state: { contextMenu, displayByList } } = this;
 		return (
-			<div id='explorer' className={editing ? 'editing' : ''}>
-				<div id='path'>
-					{[].concat(...['Explorer', ...this.props.folder].map((folder, index, self) => {
-						return [
-							<span onClick={() => this.goBack(self.length - index - 1)}>{folder}</span>,
-							<div/>
-						]
-					})).slice(0, -1)}
+			<div id="explorer" className={`view ${editing ? 'editing' : ''}`}>
+				<div id="explorerHeader" className="header">
+					<div id="path">
+						{[].concat(...['Explorer', ...this.props.folder].map((folder, index, self) => {
+							return [
+								<span onClick={() => this.goBack(self.length - index - 1)}>{folder}</span>,
+								<div className="arrow"/>
+							]
+						})).slice(0, -1)}
+					</div>
+
+					<div id="displayBy">
+						<div id="icons" className={displayByList ? '' : 'negative'} onClick={() => this.toggleDisplay(false)}/>
+						<div id="list" className={displayByList ? 'negative' : ''} onClick={() => this.toggleDisplay(true)}/>
+					</div>
 				</div>
 
-				<div id='files' onClick={this.hideContextMenu} onContextMenu={this.handleContextMenu}>
+				<div className={`scrollable ${displayByList ? 'list' : ''}`} onClick={this.hideContextMenu} onContextMenu={this.handleContextMenu}>
 					{this.props.files.map(file => this.buildFileItem(file))}
 				</div>
 

@@ -70,9 +70,10 @@ class File extends Component {
 	render() {
 		const { props: { file: { type, name } }, state: { renaming } } = this;
 		return (
-			<div className={type} onDoubleClick={this.open} onContextMenu={this.handleContextMenu} onDragStart={this.handleDragStart} draggable>
-				<div className='fileName'>
-					{(renaming) ? <AutoFocusInput value={name} onStopEditing={this.stopRenaming}/> : <span>{name}</span>}
+			<div className={`file ${renaming ? 'renaming' : ''}`} onDoubleClick={this.open} onContextMenu={this.handleContextMenu} onDragStart={this.handleDragStart} draggable>
+				<div className={type}/>
+				<div className="fileName">
+					{(renaming) ? <AutoFocusInput value={name} onStopEditing={this.stopRenaming}/> : name}
 				</div>
 			</div>
 		);
