@@ -5,6 +5,7 @@ import './global.css';
 import './explorer.css';
 import './menu.css'
 import './editor.css';
+import './taginput.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 

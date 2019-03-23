@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Modals from './Modals';
+import TagInput from './TagInput';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { InputGroup, InputGroupAddon, InputGroupText, Input, Collapse } from 'reactstrap';
 import CodeMirror from 'react-codemirror';
@@ -15,6 +16,7 @@ class QuestionModal extends Component {
 		this.updateQuestion = this.updateQuestion.bind(this);
 		this.addAnswer = this.addAnswer.bind(this);
 		this.updateCode = this.updateCode.bind(this);
+		this.updateTags = this.updateTags.bind(this);
 		this.toggle = this.toggle.bind(this);
 	}
 
@@ -46,6 +48,11 @@ class QuestionModal extends Component {
 	updateCode(code) {
 		const { data, update } = this.props;
 		update({ ...data, code });
+	}
+
+	updateTags(tags) {
+		const { data, update } = this.props;
+		update({ ...data, tags });
 	}
 
 	toggle() {
@@ -80,8 +87,8 @@ class QuestionModal extends Component {
 				<ModalHeader>Saisir une question</ModalHeader>
 				<ModalBody>
 					<Input className="mb-3" type="text" placeholder="Saisissez votre question ici" spellCheck="false" value={data.label} onChange={this.updateQuestion}/>
-					<Button onClick={this.addAnswer} className="mb-3 mr-3">Ajouter une réponse</Button>
-					<Button className="mb-3" onClick={this.toggle}>Ajouter un extrait de code</Button>
+					<Button onClick={this.addAnswer} color="success" className="mb-3 mr-3">Ajouter une réponse</Button>
+					<Button onClick={this.toggle} color="success" className="mb-3">Ajouter un extrait de code</Button>
 					<Collapse isOpen={data.expand}>
 						<CodeMirror className="border mb-3" value={data.code} onChange={this.updateCode} options={{ mode: 'text/x-java', indentUnit: 4, indentWithTabs: true }} ref={this.codeMirror}/>
 					</Collapse>
@@ -98,6 +105,7 @@ class QuestionModal extends Component {
 							</InputGroup>
 						);
 					})}
+					<TagInput tags={data.tags || []} onChange={this.updateTags}/>
 				</ModalBody>
 				<ModalFooter>
 					<Button color="primary" onClick={e => this.onConfirm(data)}>Enregistrer</Button>
