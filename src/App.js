@@ -8,6 +8,7 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			tags: [],
 			files: [],
 			folder: {
 				path: [],
@@ -23,6 +24,7 @@ class App extends Component {
 		};
 
 		this.requestFolder = this.requestFolder.bind(this);
+		this.searchByTags = this.searchByTags.bind(this);
 		this.create = this.create.bind(this);
 		this.edit = this.edit.bind(this);
 		this.save = this.save.bind(this);
@@ -33,9 +35,21 @@ class App extends Component {
 	}
 
 	requestFolder(_id) {
-		request('ListFolder', { _id }).then(res => res.json()).then( ({folder, files}) => {
-			this.setState({folder, files})
+		this.setState({ tags: [] });
+		request('ListFolder', { _id }).then(res => res.json()).then(({folder, files}) => {
+			this.setState({ folder, files });
 		});
+	}
+
+	searchByTags(tags) {
+		if (tags.length) {
+			this.setState({ tags });
+			request('GetQuestionsByTags', { tags, idParent: this.state.folder.active._id }).then(res => res.json()).then(files => {
+				this.setState({ files });
+			});
+		} else {
+			this.refresh();
+		}
 	}
 
 	create() {
@@ -51,7 +65,7 @@ class App extends Component {
 	}
 
 	edit(model) {
-		request('GetQuestions', { _ids: model.questions.map(quest => quest.idQuestion) }).then(res => res.json()).then(questions => {
+		request('GetQuestionsByIds', { _ids: model.questions.map(quest => quest.idQuestion) }).then(res => res.json()).then(questions => {
 			this.setState({
 				editor: {
 					visible: true,
@@ -83,7 +97,7 @@ class App extends Component {
 
 	refreshEditor() {
 		const { editor } = this.state;
-		request('GetQuestions', { _ids: editor.questions.map(quest => quest._id) }).then(res => res.json()).then(questions => {
+		request('GetQuestionsByIds', { _ids: editor.questions.map(quest => quest._id) }).then(res => res.json()).then(questions => {
 			this.setState(state => {
 				return {
 					editor: {
@@ -104,10 +118,13 @@ class App extends Component {
 	}
 
 	render() {
-		const { folder, files, editor } = this.state;
+		const { folder, files, tags, editor } = this.state;
 		return (
 			<div id="app">
-				<ExplorerView editing={editor.visible} folder={folder} files={files} requestFolder={this.requestFolder} create={this.create} edit={this.edit} refresh={this.refresh}/>
+				<ExplorerView editing={editor.visible} folder={folder} files={files} tags={tags}
+				requestFolder={this.requestFolder} searchByTags={this.searchByTags}
+				create={this.create} edit={this.edit} refresh={this.refresh}/>
+
 				<Editor editor={editor} folder={folder} update={this.updateEditor} save={this.save} closeEditor={this.closeEditor}/>
 				{Modals.get()}
 			</div>

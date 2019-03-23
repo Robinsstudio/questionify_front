@@ -1,5 +1,6 @@
 #explorerHeader {
 	position: relative;
+	justify-content: space-between;
 }
 
 #path {
@@ -19,9 +20,7 @@
 }
 
 #displayBy {
-	position: absolute;
 	display: flex;
-	right: 0;
 }
 
 #icons, #list {

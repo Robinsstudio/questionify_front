@@ -18,7 +18,7 @@ class File extends Component {
 	}
 
 	open() {
-		const { edit, requestFolder, refresh, folder, file } = this.props;
+		const { edit, requestFolder, refresh, file } = this.props;
 		if (file.type === 'folder') {
 			requestFolder(file._id);
 		} else if (file.type === 'question') {

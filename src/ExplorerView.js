@@ -3,6 +3,7 @@ import File from './File';
 import ContextMenu from './ContextMenu';
 import Modals from './Modals';
 import request from './request';
+import TagInput from './TagInput';
 
 class ExplorerView extends Component {
 	constructor(props) {
@@ -65,12 +66,16 @@ class ExplorerView extends Component {
 	}
 	
 	render() {
-		const { props: { editing, folder }, state: { contextMenu, displayByList } } = this;
+		const { props: { editing, folder, tags, searchByTags }, state: { contextMenu, displayByList } } = this;
 		const path = folder.path.concat(folder.active.name ? folder.active : []);
 
 		return (
 			<div id="explorer" className={`view ${editing ? 'editing' : ''}`}>
 				<div id="explorerHeader" className="header">
+					<div id="searchByTags">
+						<TagInput tags={tags} onChange={searchByTags}/>
+					</div>
+
 					<div id="path">
 						{[].concat(...[{ name: 'Explorer' }, ...path].map(folder => {
 							return [
