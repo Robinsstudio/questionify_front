@@ -23,11 +23,11 @@ class Editor extends Component {
 	}
 
 	save() {
-		const { editor, folder, save } = this.props;
-		if (editor.file) {
-			save(editor.file);
+		const { editor, save } = this.props;
+		if (editor.model.name) {
+			save(editor.model.name);
 		} else {
-			Modals.showPromptModal('Nouveau QCM', 'Entrez un nom de QCM ici...').then(file => save(folder.concat(file))).catch(() => {});
+			Modals.showPromptModal('Nouveau QCM', 'Entrez un nom de QCM ici...').then(name => save(name)).catch(() => {});
 		}
 	}
 
@@ -36,12 +36,15 @@ class Editor extends Component {
 		const index = parseInt(event.target.dataset.index);
 		
 		if (event.dataTransfer.types.includes('question')) {
-			const question = event.dataTransfer.getData('question');
+			const question = JSON.parse(event.dataTransfer.getData('question'));
 
-			update({
-				...editor,
-				questions: [...editor.questions.slice(0, index), JSON.parse(question), ...editor.questions.slice(index)]
-			});
+			if (!editor.questions.some(quest => question._id === quest._id)) {
+				update({
+					...editor,
+					questions: [...editor.questions.slice(0, index), question, ...editor.questions.slice(index)]
+				});
+			}
+
 		} else if (event.dataTransfer.types.includes('srcindex')) {
 			const questions = editor.questions.slice();
 			const srcIndex = parseInt(event.dataTransfer.getData('srcindex'));

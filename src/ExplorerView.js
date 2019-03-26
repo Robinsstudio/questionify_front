@@ -20,13 +20,12 @@ class ExplorerView extends Component {
 	}
 
 	createFolder(name) {
-		const { folder, requestFolder } = this.props;
-		request('FolderCreate', { folder: folder.concat(name) }).then( () => requestFolder() );
+		const { folder, refresh } = this.props;
+		request('CreateFolder', { name, idParent: folder.active._id }).then( () => refresh() );
 	}
 
-	goBack(howMany) {
-		const { folder, requestFolder } = this.props;
-		requestFolder( (howMany <= folder.length) ? folder.slice(0, folder.length - howMany) : folder );
+	goBack(_id) {
+		this.props.requestFolder(_id);
 	}
 
 	handleContextMenu(event, items = []) {
@@ -45,8 +44,8 @@ class ExplorerView extends Component {
 			{ label: 'Nouveau dossier', onClick: () => {
 				Modals.showPromptModal('Nouveau dossier', 'Entrez un nom de dossier ici...').then(name => this.createFolder(name)).catch(() => {});
 			}},
-			{ label: 'Nouvelle question', onClick: () => Modals.showQuestionModal({ question: '', answers: [] }).then(quest => {
-				request('FileSave', { file: folder.concat(quest.name), json: JSON.stringify(quest) }).then( () => refresh() );
+			{ label: 'Nouvelle question', onClick: () => Modals.showQuestionModal({ label: '', answers: [], idParent: folder.active._id }).then(quest => {
+				request('SaveQuestion', quest).then( () => refresh() );
 			}).catch(() => {}) },
 			{ label: 'Nouveau QCM', onClick: () => create() }
 		);
@@ -66,14 +65,16 @@ class ExplorerView extends Component {
 	}
 	
 	render() {
-		const { props: { editing }, state: { contextMenu, displayByList } } = this;
+		const { props: { editing, folder }, state: { contextMenu, displayByList } } = this;
+		const path = folder.path.concat(folder.active.name ? folder.active : []);
+
 		return (
 			<div id="explorer" className={`view ${editing ? 'editing' : ''}`}>
 				<div id="explorerHeader" className="header">
 					<div id="path">
-						{[].concat(...['Explorer', ...this.props.folder].map((folder, index, self) => {
+						{[].concat(...[{ name: 'Explorer' }, ...path].map(folder => {
 							return [
-								<span onClick={() => this.goBack(self.length - index - 1)}>{folder}</span>,
+								<span onClick={() => this.goBack(folder._id)}>{folder.name}</span>,
 								<div className="arrow"/>
 							]
 						})).slice(0, -1)}

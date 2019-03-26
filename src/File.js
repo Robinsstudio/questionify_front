@@ -18,26 +18,26 @@ class File extends Component {
 	}
 
 	open() {
-		const { edit, requestFolder, refresh, folder, file: { type, name, data } } = this.props;
-		if (type === 'folder') {
-			requestFolder(folder.concat(name));
-		} else if (type === 'question') {
-			Modals.showQuestionModal({ ...data, name }).then(quest => {
-				request('FileSave', { file: folder.concat(quest.name), json: JSON.stringify(quest) }).then( () => refresh() );
+		const { edit, requestFolder, refresh, folder, file } = this.props;
+		if (file.type === 'folder') {
+			requestFolder(file._id);
+		} else if (file.type === 'question') {
+			Modals.showQuestionModal(file).then(quest => {
+				request('SaveQuestion', quest).then( () => refresh() );
 			}).catch(() => {});
-		} else if (type === 'qcm') {
-			edit(data.questions, folder.concat(name));
+		} else if (file.type === 'qcm') {
+			edit(file);
 		}
 	}
 
 	remove() {
-		const { refresh, folder, file } = this.props;
-		request('FileRemove', { file: folder.concat(file.name) }).then( () => refresh() );
+		const { refresh, file: { _id } } = this.props;
+		request('Delete', { _id }).then( () => refresh() );
 	}
 
 	rename(name) {
-		const { refresh, folder, file } = this.props;
-		request('FileRename', { file: folder.concat(file.name), name }).then( () => refresh() );
+		const { refresh, file: { _id } } = this.props;
+		request('Rename', { _id, name }).then( () => refresh() );
 	}
 
 	startRenaming() {
@@ -61,9 +61,9 @@ class File extends Component {
 	}
 
 	handleDragStart(event) {
-		const { folder, file: { name, type, data} } = this.props;
-		if (type === 'question') {
-			event.dataTransfer.setData('question', JSON.stringify({ ...data, file: folder.concat(name) }));
+		const { file } = this.props;
+		if (file.type === 'question') {
+			event.dataTransfer.setData('question', JSON.stringify(file));
 		}
 	}
 

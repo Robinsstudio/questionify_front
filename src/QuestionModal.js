@@ -20,17 +20,17 @@ class QuestionModal extends Component {
 
 	updateQuestion(event) {
 		const { data, update } = this.props;
-		update({ ...data, question:  event.target.value});
+		update({ ...data, label:  event.target.value});
 	}
 
 	updateAnswer(event, index) {
 		const { data, update } = this.props;
-		update({ ...data, answers: data.answers.map((ans, i) => (i === index) ? { answer: event.target.value, correct: ans.correct } : ans) });
+		update({ ...data, answers: data.answers.map((ans, i) => (i === index) ? { label: event.target.value, correct: ans.correct } : ans) });
 	}
 
 	addAnswer() {
 		const { data, update } = this.props;
-		update({ ...data, answers: data.answers.concat({ answer: '', correct: false }) });
+		update({ ...data, answers: data.answers.concat({ label: '', correct: false }) });
 	}
 
 	removeAnswer(index) {
@@ -40,7 +40,7 @@ class QuestionModal extends Component {
 
 	setAnswerCorrect(event, index) {
 		const { data, update } = this.props;
-		update({ ...data, answers: data.answers.map((ans, i) => (i === index) ? { answer: ans.answer, correct: event.target.checked } : ans) });
+		update({ ...data, answers: data.answers.map((ans, i) => (i === index) ? { label: ans.label, correct: event.target.checked } : ans) });
 	}
 
 	updateCode(code) {
@@ -79,7 +79,7 @@ class QuestionModal extends Component {
 			<Modal isOpen={open} toggle={e => this.onCancel(data)} size="lg">
 				<ModalHeader>Saisir une question</ModalHeader>
 				<ModalBody>
-					<Input className="mb-3" type="text" placeholder="Saisissez votre question ici" spellCheck="false" value={data.question} onChange={this.updateQuestion}/>
+					<Input className="mb-3" type="text" placeholder="Saisissez votre question ici" spellCheck="false" value={data.label} onChange={this.updateQuestion}/>
 					<Button onClick={this.addAnswer} className="mb-3 mr-3">Ajouter une réponse</Button>
 					<Button className="mb-3" onClick={this.toggle}>Ajouter un extrait de code</Button>
 					<Collapse isOpen={data.expand}>
@@ -93,7 +93,7 @@ class QuestionModal extends Component {
 										<Input addon type="checkbox" checked={ans.correct} onChange={e => this.setAnswerCorrect(e, index)}/>
 									</InputGroupText>
 								</InputGroupAddon>
-								<Input className="mr-3" type="text" placeholder="Saisissez votre réponse ici" spellCheck="false" value={ans.answer} onChange={e => this.updateAnswer(e, index)}/>
+								<Input className="mr-3" type="text" placeholder="Saisissez votre réponse ici" spellCheck="false" value={ans.label} onChange={e => this.updateAnswer(e, index)}/>
 								<Button color="danger" onClick={e => this.removeAnswer(index)}>Supprimer</Button>
 							</InputGroup>
 						);
