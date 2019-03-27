@@ -57,9 +57,14 @@ app.post(/ListFolder/, (req, res) => {
 	}
 });
 
-app.post(/GetQuestions/, (req, res) => {
+app.post(/GetQuestionsByIds/, (req, res) => {
 	const { _ids } = req.body;
 	Question.where('_id').in(_ids).then(questions => res.json(questions.sort((q1, q2) => _ids.indexOf(q1.id) - _ids.indexOf(q2.id))));
+});
+
+app.post(/GetQuestionsByTags/, (req, res) => {
+	const { tags, idParent } = req.body;
+	Question.find({ idParent }).where('tags').all(tags).then(questions => res.json(questions.sort((q1, q2) => q1.name.localeCompare(q2.name))));
 });
 
 app.post(/Rename/, (req, res) => {
