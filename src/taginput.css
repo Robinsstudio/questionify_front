@@ -1,0 +1,12 @@
+.tag {
+	display: inline-block;
+	border-radius: 3px;
+	font-size: 10pt;
+	color: white;
+	padding: 3px 7px 3px 7px;
+}
+
+.removeTag:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}

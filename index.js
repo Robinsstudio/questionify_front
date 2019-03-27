@@ -12,6 +12,7 @@ const Question = mongoose.model('Question', {
 	name: String,
 	label: String,
 	code: String,
+	tags: [{ type: String }],
 	answers: [{
 		label: String,
 		correct: Boolean
