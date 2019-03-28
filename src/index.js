@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './global.css';
-import './explorer.css';
-import './menu.css'
-import './editor.css';
-import './taginput.css';
+import './style/global.css';
+import './style/explorer.css';
+import './style/menu.css'
+import './style/editor.css';
+import './style/taginput.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
