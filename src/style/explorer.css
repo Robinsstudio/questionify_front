@@ -11,7 +11,7 @@
 	width: 25px;
 	height: 25px;
 	
-	background-image: url("https://image.flaticon.com/icons/svg/118/118740.svg");
+	background-image: url("../icons/arrow.svg");
 }
 
 #path > span:hover {
@@ -34,11 +34,11 @@
 }
 
 #icons {
-	background-image: url("icons.png");
+	background-image: url("../icons/icons.png");
 }
 
 #list {
-	background-image: url("list.png");
+	background-image: url("../icons/list.png");
 }
 
 .list {
@@ -77,15 +77,15 @@
 }
 
 .folder {
-	background-image: url("https://image.flaticon.com/icons/svg/148/148953.svg");
+	background-image: url("../icons/folder.svg");
 }
 
 .question {
-	background-image: url("question.png");
+	background-image: url("../icons/question.png");
 }
 
 .qcm {
-	background-image: url("qcm.png");
+	background-image: url("../icons/qcm.png");
 }
 
 .fileName {
