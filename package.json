@@ -12,6 +12,9 @@
     "react-codemirror": "^1.0.0",
     "react-dom": "^16.7.0",
     "react-scripts": "^2.1.5",
+    "react-simple-tooltip": "^2.5.0",
+    "react-tooltip-lite": "^1.9.1",
+    "reactjs-mappletooltip": "^1.4.63",
     "reactstrap": "^7.1.0"
   },
   "scripts": {

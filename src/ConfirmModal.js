@@ -7,6 +7,7 @@ class ConfirmModal extends Component {
 
         this.onConfirm = this.onConfirm.bind(this);
         this.onCancel = this.onCancel.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
     }
 
     onConfirm() {
@@ -21,16 +22,23 @@ class ConfirmModal extends Component {
         hide();
     }
 
+    handleKeyDown = (event)=>{
+        if(event.key === 'Enter'){
+            window.alert('Ouiiiiii');
+            this.onConfirm();
+        }
+    }
+
     render() {
         const { open, title, body } = this.props;
         return (
-            <Modal isOpen={open} toggle={this.onCancel}>
+            <Modal isOpen={open} toggle={this.onCancel} onClick={() => alert('Ninja !')}>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalBody>
                     <p>{body}</p>
                 </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={this.onConfirm}>Oui</Button>
+                <ModalFooter >
+                    <Button color="primary" onClick={this.onConfirm} >Oui</Button>
                     <Button color="secondary" onClick={this.onCancel}>Non</Button>
                 </ModalFooter>
             </Modal>

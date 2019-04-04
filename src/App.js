@@ -117,6 +117,8 @@ class App extends Component {
 		this.requestFolder(folder.active._id);
 	}
 
+	
+
 	render() {
 		const { folder, files, tags, editor } = this.state;
 		return (

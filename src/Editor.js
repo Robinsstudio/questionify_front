@@ -6,12 +6,12 @@ class Editor extends Component {
 	constructor(props) {
 		super(props);
 
-		this.removeQuestion = this.removeQuestion.bind(this);
 		this.save = this.save.bind(this);
 		this.handleDrop = this.handleDrop.bind(this);
 		this.handleDragOver = this.handleDragOver.bind(this);
 		this.handleDragLeave = this.handleDragLeave.bind(this);
 		this.handleDragStart = this.handleDragStart.bind(this);
+		this.handleKeyPress = this.handleKeyPress.bind(this);
 	}
 
 	removeQuestion(index) {
@@ -75,13 +75,22 @@ class Editor extends Component {
 		return <div data-index={index} className={`mt-2 mb-2 ml-3 mr-3 ${stretch} separator`} onDrop={this.handleDrop} onDragOver={this.handleDragOver} onDragLeave={this.handleDragLeave}/>;
 	}
 
+	handleKeyPress = (event) =>{
+		if(event.key === 'Enter'){
+			window.alert('Key Down !');
+			console.log('oooooooo');
+		}
+		if(event.key === 'a'){
+			console.log('aaaaaaaaaaaaaaaaaaaaa');
+		}
+	}
 	render() {
 		const { editor, closeEditor } = this.props;
 		return (
-			<div id="editor" className={`view ${editor.visible ? 'editing' : ''}`}>
+			<div id="editor" className={`view ${editor.visible ? 'editing' : ''}`} onKeyPress={this.handleKeyPress}>
 				<div id="editorHeader" className="header">
 					<span className="ml-3">Éditer un QCM</span>
-					<div id="buttons" className="mr-3">
+					<div id="buttons" className="mr-3" >
 						<Button color="primary" className="mr-2" onClick={this.save}>Enregistrer</Button>
 						<Button color="secondary" className="mr-2" onClick={closeEditor}>Annuler</Button>
 					</div>

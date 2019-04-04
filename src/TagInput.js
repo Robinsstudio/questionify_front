@@ -48,7 +48,7 @@ class TagInput extends Component {
 						</div>
 					);
 				}) }
-				<input placeholder="Ajouter un tag..." value={input} onChange={this.handleChange} onKeyDown={this.handleKeyDown} style={{ border: 'none', outline: 'none' }}/>
+				<input autoFocus placeholder="Ajouter un tag..." value={input} onChange={this.handleChange} onKeyDown={this.handleKeyDown} style={{ border: 'none', outline: 'none' }}/>
 			</div>
 		);
 	}

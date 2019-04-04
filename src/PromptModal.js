@@ -17,10 +17,10 @@ class PromptModal extends Component {
     render() {
         const { open, title, placeholder, value, update } = this.props;
         return (
-            <Modal isOpen={open} toggle={e => this.onCancel(value)}>
+            <Modal isOpen={open} toggle={e => this.onCancel(value)} autoFocus={false}>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalBody>
-                    <Input type="text" spellCheck="false" placeholder={placeholder} value={value} onChange={e => update(e.target.value)}/>
+                    <Input type="text" spellCheck="false" placeholder={placeholder} value={value} onChange={e => update(e.target.value)} autoFocus/>
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={e => this.onConfirm(value)}>Valider</Button>
