@@ -23,7 +23,7 @@ class ContextMenu extends Component {
 	
 	render() {
 		return (
-			<div id='contextMenu' onClick={this.props.onClick} ref={this.element}>
+			<div className="menu" onClick={this.props.onClick} ref={this.element}>
 				{this.props.items.map(item => <div {...item}>{item.label}</div>)}
 			</div>
 		);
