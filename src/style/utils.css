@@ -1,0 +1,5 @@
+/*** Permet à l'éditeur de s'adapter à la taille de son contenu ***/
+
+.CodeMirror {
+	height: auto !important;
+}

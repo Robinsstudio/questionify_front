@@ -52,8 +52,7 @@ class Modals extends Component {
 	}
 
 	showQuestionModal(data, promise) {
-		const code = data.code || 'public class Main {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello world!");\n\t}\n}';
-		this.setState({ questionModal: { open: true, data: { ...data, code, type: 'question' }, promise } });
+		this.setState({ questionModal: { open: true, data: { ...data, type: 'question' }, promise } });
 	}
 
 	updateQuestionModal(data) {

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import AutoCompleteInput from './AutoCompleteInput';
+import request from './request';
 
 class TagInput extends Component {
 	constructor(props) {
@@ -9,6 +11,8 @@ class TagInput extends Component {
 		this.remove = this.remove.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleKeyDown = this.handleKeyDown.bind(this);
+
+		this.input = React.createRef();
 	}
 
 	add(tag) {
@@ -21,19 +25,24 @@ class TagInput extends Component {
 		onChange(tags.filter((_, i) => i !== index));
 	}
 
-	handleChange(event) {
-		this.setState({ input: event.target.value.replace(/\s/g, '') });
+	handleChange(input) {
+		this.setState({ input: input.replace(/\s/g, '') });
 	}
 
 	handleKeyDown(event) {
 		const { props: { tags }, state: { input } } = this;
 		if (input.length && [' ', 'Enter'].includes(event.key)) {
-			this.add(event.target.value);
+			this.add(input);
+			this.input.current.clearHints();
 			event.preventDefault();
 		} else if (!input.length && event.key === 'Backspace') {
 			this.remove(tags.length - 1);
 			event.preventDefault();
 		}
+	}
+
+	loadHints(start) {
+		return request('GetTagsStartingWith', { start } ).then(res => res.json());
 	}
 
 	render() {
@@ -48,7 +57,16 @@ class TagInput extends Component {
 						</div>
 					);
 				}) }
-				<input placeholder="Ajouter un tag..." value={input} onChange={this.handleChange} onKeyDown={this.handleKeyDown} style={{ border: 'none', outline: 'none' }}/>
+
+				<AutoCompleteInput
+					placeholder="Ajouter un tag..."
+					value={input}
+					onChange={this.handleChange}
+					onKeyDown={this.handleKeyDown}
+					loadHints={this.loadHints}
+					style={{ border: 'none', outline: 'none' }}
+					ref={this.input}
+				/>
 			</div>
 		);
 	}

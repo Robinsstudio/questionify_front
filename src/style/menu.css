@@ -1,15 +1,32 @@
-#contextMenu {
+.menu {
 	position: absolute;
 	border: 1px #aaaaaa solid;
 	background-color: white;
 	z-index: 1000;
 }
 
-#contextMenu > div {
-	color: #333;
+.menu > div {
 	padding: 5px;
 }
 
-#contextMenu > div:hover {
+.menu > div:hover {
 	background-color: #ebebeb;
+}
+
+.autocomplete {
+	display: inline-block;
+	position: relative;
+}
+
+.autocomplete > .menu {
+	width: 100%;
+}
+
+.autocomplete > .menu > div {
+	background-color: #ffffff;
+}
+
+.autocomplete > .menu > div.active {
+	background-color: #ebebeb;
+
 }

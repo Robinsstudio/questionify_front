@@ -25,6 +25,11 @@ app.post(/GetQuestionsByTags/, (req, res) => {
 	Impl.getQuestionsByTags(tags, idParent).then(questions => res.json(questions));
 });
 
+app.post(/GetTagsStartingWith/, (req, res) => {
+	const { start } = req.body;
+	Impl.getTagsStartingWith(start).then(tags => res.json(tags));
+});
+
 app.post(/Rename/, (req, res) => {
 	const { _id, name } = req.body;
 	Impl.rename(_id, name).then( () => res.status(200).end() );
