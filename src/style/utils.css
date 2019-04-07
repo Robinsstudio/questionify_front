@@ -3,3 +3,14 @@
 .CodeMirror {
 	height: auto !important;
 }
+
+/*** FileInput ***/
+
+.CustomInput > .custom-file-label {
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.CustomInput > .custom-file-label::after {
+	content: "Parcourir";
+}

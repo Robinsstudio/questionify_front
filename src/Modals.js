@@ -13,6 +13,7 @@ class Modals extends Component {
 				data: {
 					label: '',
 					answers: [],
+					files: [],
 					tags: []
 				}
 			}

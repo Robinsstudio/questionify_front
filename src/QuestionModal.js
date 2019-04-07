@@ -7,6 +7,7 @@ import CodeMirror from 'react-codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/addon/display/placeholder';
+import FileInput from './FileInput';
 
 class QuestionModal extends Component {
 	constructor(props) {
@@ -16,6 +17,7 @@ class QuestionModal extends Component {
 
 		this.updateQuestion = this.updateQuestion.bind(this);
 		this.addAnswer = this.addAnswer.bind(this);
+		this.updateFiles = this.updateFiles.bind(this);
 		this.updateTags = this.updateTags.bind(this);
 		this.toggle = this.toggle.bind(this);
 	}
@@ -43,6 +45,11 @@ class QuestionModal extends Component {
 	setAnswerCorrect(event, index) {
 		const { data, update } = this.props;
 		update({ ...data, answers: data.answers.map((ans, i) => (i === index) ? { label: ans.label, correct: event.target.checked } : ans) });
+	}
+
+	updateFiles(event) {
+		const { data, update } = this.props;
+		update({ ...data, files: event.target.files });
 	}
 
 	updateTags(tags) {
@@ -107,6 +114,9 @@ class QuestionModal extends Component {
 						<Button onClick={this.addAnswer} color="success" className="mb-3">
 							<i className="fas fa-plus"/>
 						</Button>
+					</InputGroup>
+					<InputGroup className="mb-3">
+						<FileInput id="firstInput" placeholder="Choisissez une image..." accept="image/*" onChange={this.updateFiles} multiple/>
 					</InputGroup>
 					<TagInput tags={data.tags || []} onChange={this.updateTags}/>
 				</ModalBody>
