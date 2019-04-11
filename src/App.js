@@ -86,13 +86,13 @@ class App extends Component {
 
 		request('SaveMultipleChoice', { ...editor.model, idParent, name, questions: editor.questions.map(quest => {
 			return { idQuestion: quest._id };
-		}) }).then(this.closeEditor);
+		}) }).then(this.closeEditor).then(this.refresh);
 	}
 
 	closeEditor() {
 		this.setState((state) => {
-			return { editor: { ...state.editor, visible: false } }
-		}, () => this.refresh() );
+			return { editor: { ...state.editor, visible: false } };
+		});
 	}
 
 	refreshEditor() {

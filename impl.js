@@ -71,20 +71,25 @@ module.exports = {
 			});
 		}
 		return getByParams({ idParent: null }).then(files => {
-			return { folder: { path: [], active: {} }, files }
+			return { folder: { path: [], active: {} }, files };
 		});
 	},
 
 	getQuestionsByIds: (_ids) => {
 		return Question.where('_id').in(_ids).then(questions => { 
-			return questions.sort((q1, q2) => _ids.indexOf(q1.id) - _ids.indexOf(q2.id))
+			return questions.sort((q1, q2) => _ids.indexOf(q1.id) - _ids.indexOf(q2.id));
 		});
 	},
 
 	getQuestionsByTags: (tags, idParent) => {
 		return Question.find({ idParent }).where('tags').all(tags).then(questions => {
-			return questions.sort((q1, q2) => q1.name.localeCompare(q2.name))
+			return questions.sort((q1, q2) => q1.name.localeCompare(q2.name));
 		});
+	},
+
+	getTagsStartingWith: (start) => {
+		const regex = new RegExp(eval(`/^${start}/i`));
+		return Question.distinct('tags').then(tags => tags.filter(tag => tag.match(regex)).sort());
 	},
 
 	rename: (_id, name) => {
