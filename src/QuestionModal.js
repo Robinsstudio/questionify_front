@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import Modals from './Modals';
 import TagInput from './TagInput';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { InputGroup, InputGroupAddon, InputGroupText, Input, Collapse } from 'reactstrap';
+import { InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import CodeMirror from 'react-codemirror';
 import 'codemirror/lib/codemirror.css';
-import 'codemirror/mode/clike/clike';
+import 'codemirror/mode/markdown/markdown';
+import 'codemirror/addon/display/placeholder';
 
 class QuestionModal extends Component {
 	constructor(props) {
@@ -15,14 +16,13 @@ class QuestionModal extends Component {
 
 		this.updateQuestion = this.updateQuestion.bind(this);
 		this.addAnswer = this.addAnswer.bind(this);
-		this.updateCode = this.updateCode.bind(this);
 		this.updateTags = this.updateTags.bind(this);
 		this.toggle = this.toggle.bind(this);
 	}
 
-	updateQuestion(event) {
+	updateQuestion(label) {
 		const { data, update } = this.props;
-		update({ ...data, label:  event.target.value});
+		update({ ...data, label});
 	}
 
 	updateAnswer(event, index) {
@@ -43,11 +43,6 @@ class QuestionModal extends Component {
 	setAnswerCorrect(event, index) {
 		const { data, update } = this.props;
 		update({ ...data, answers: data.answers.map((ans, i) => (i === index) ? { label: ans.label, correct: event.target.checked } : ans) });
-	}
-
-	updateCode(code) {
-		const { data, update } = this.props;
-		update({ ...data, code });
 	}
 
 	updateTags(tags) {
@@ -86,12 +81,13 @@ class QuestionModal extends Component {
 			<Modal isOpen={open} toggle={e => this.onCancel(data)} size="lg">
 				<ModalHeader>Saisir une question</ModalHeader>
 				<ModalBody>
-					<Input className="mb-3" type="text" placeholder="Saisissez votre question ici" spellCheck="false" value={data.label} onChange={this.updateQuestion}/>
-					<Button onClick={this.addAnswer} color="success" className="mb-3 mr-3">Ajouter une réponse</Button>
-					<Button onClick={this.toggle} color="success" className="mb-3">Ajouter un extrait de code</Button>
-					<Collapse isOpen={data.expand}>
-						<CodeMirror className="border mb-3" value={data.code} onChange={this.updateCode} options={{ mode: 'text/x-java', indentUnit: 4, indentWithTabs: true }} ref={this.codeMirror}/>
-					</Collapse>
+					<CodeMirror
+						value={data.label}
+						onChange={this.updateQuestion}
+						options={{ mode: 'text/x-markdown', placeholder: 'Saisissez votre question...', indentUnit: 4, indentWithTabs: true }}
+						className="border mb-3"
+						ref={this.codeMirror}
+					/>
 					{data.answers.map((ans, index) => {
 						return (
 							<InputGroup className="mb-3">
@@ -101,10 +97,17 @@ class QuestionModal extends Component {
 									</InputGroupText>
 								</InputGroupAddon>
 								<Input className="mr-3" type="text" placeholder="Saisissez votre réponse ici" spellCheck="false" value={ans.label} onChange={e => this.updateAnswer(e, index)}/>
-								<Button color="danger" onClick={e => this.removeAnswer(index)}>Supprimer</Button>
+								<Button color="danger" onClick={e => this.removeAnswer(index)}>
+									<i className="fas fa-times"/>
+								</Button>
 							</InputGroup>
 						);
 					})}
+					<InputGroup className="justify-content-center">
+						<Button onClick={this.addAnswer} color="success" className="mb-3">
+							<i className="fas fa-plus"/>
+						</Button>
+					</InputGroup>
 					<TagInput tags={data.tags || []} onChange={this.updateTags}/>
 				</ModalBody>
 				<ModalFooter>

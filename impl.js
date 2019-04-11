@@ -7,7 +7,6 @@ const Question = mongoose.model('Question', {
 	type: String,
 	name: String,
 	label: String,
-	code: String,
 	tags: [{ type: String }],
 	answers: [{
 		label: String,
