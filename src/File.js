@@ -51,13 +51,39 @@ class File extends Component {
 		this.setState({ renaming: false });
 	}
 
+	copyToClipboard(value) {
+		const hiddenElement = document.createElement('input');
+		hiddenElement.style.background = 'transparent';
+		hiddenElement.value = value;
+
+		document.body.appendChild(hiddenElement);
+		hiddenElement.select();
+		document.execCommand('copy');
+		document.body.removeChild(hiddenElement);
+	}
+
 	handleContextMenu(event) {
-		const { name } = this.props.file;
-		this.props.handleContextMenu(event, [
+		const { file: { name, type, url, _id }, refresh } = this.props;
+
+		const multipleChoiceItem = url ? {
+			label: 'Copier le lien partageable',
+			onClick: () => this.copyToClipboard(`${window.location.href}qcm/${url}`)
+		} : {
+			label: 'Générer un lien partageable',
+			onClick: () => request('/GenerateLink', { _id }).then(() => refresh())
+		};
+
+		const menuItems = [
 			{ label: 'Ouvrir', onClick: this.open },
 			{ label: 'Renommer', onClick: this.startRenaming },
-			{ label: 'Supprimer', onClick: () => Modals.showConfirmModal('Supprimer', `Voulez-vous vraiment supprimer ${name} ?`).then(this.remove).catch(() => {}) }
-		]);
+			{
+				label: 'Supprimer',
+				onClick: () => Modals.showConfirmModal('Supprimer', `Voulez-vous vraiment supprimer ${name} ?`)
+					.then(this.remove).catch(() => {})
+			}
+		].concat(type === 'qcm' ? multipleChoiceItem : []);
+
+		this.props.handleContextMenu(event, menuItems);
 	}
 
 	handleDragStart(event) {

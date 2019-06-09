@@ -6,11 +6,12 @@ import './style/explorer.css';
 import './style/menu.css'
 import './style/editor.css';
 import './style/taginput.css';
+import './style/student.css';
 import './style/utils.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App/>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
