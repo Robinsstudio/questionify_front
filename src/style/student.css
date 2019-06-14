@@ -1,0 +1,21 @@
+.centerVertically {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+}
+
+.answer {
+	transition: none;
+}
+
+.correct {
+	background-color: #237d37;
+	border-color: #237d37;
+	color: white;
+}
+
+.incorrect {
+	background-color: #c10a1c;
+	border-color: #c10a1c;
+	color: white;
+}
