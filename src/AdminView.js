@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ExplorerView from './ExplorerView';
 import Editor from './Editor';
+import SessionView from './SessionView';
 import request from './request';
 
 class AdminView extends Component {
@@ -19,6 +20,10 @@ class AdminView extends Component {
 				model: {
 					questions: []
 				}
+			},
+			sessionView: {
+				visible: false,
+				sessions: []
 			}
 		};
 
@@ -30,6 +35,7 @@ class AdminView extends Component {
 		this.closeEditor = this.closeEditor.bind(this);
 		this.updateEditor = this.updateEditor.bind(this);
 		this.refreshEditor = this.refreshEditor.bind(this);
+		this.updateSessionView = this.updateSessionView.bind(this);
 		this.refresh = this.refresh.bind(this);
 	}
 
@@ -108,6 +114,15 @@ class AdminView extends Component {
 		});
 	}
 
+	updateSessionView(data) {
+		this.setState({
+			sessionView: {
+				...this.state.sessionView,
+				...data
+			}
+		});
+	}
+
 	refresh() {
 		const { editor, folder } = this.state;
 		if (editor.visible) {
@@ -117,14 +132,30 @@ class AdminView extends Component {
 	}
 
 	render() {
-		const { folder, files, tags, editor } = this.state;
+		const { folder, files, tags, editor, sessionView } = this.state;
 		return (
 			<div id="app">
-				<ExplorerView editing={editor.visible} folder={folder} files={files} tags={tags}
-				requestFolder={this.requestFolder} searchByTags={this.searchByTags}
-				create={this.create} edit={this.edit} refresh={this.refresh}/>
+				<ExplorerView
+					folder={folder}
+					files={files}
+					tags={tags}
+					requestFolder={this.requestFolder}
+					searchByTags={this.searchByTags}
+					create={this.create}
+					edit={this.edit}
+					updateSessionView={this.updateSessionView}
+					refresh={this.refresh}
+				/>
 
-				<Editor editor={editor} folder={folder} update={this.updateEditor} save={this.save} closeEditor={this.closeEditor}/>
+				<Editor
+					editor={editor}
+					folder={folder}
+					update={this.updateEditor}
+					save={this.save}
+					closeEditor={this.closeEditor}
+				/>
+
+				<SessionView {...sessionView} updateSessionView={this.updateSessionView}/>
 			</div>
 		);
 	}

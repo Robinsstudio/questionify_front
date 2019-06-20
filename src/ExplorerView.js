@@ -10,6 +10,7 @@ class ExplorerView extends Component {
 		super(props);
 		this.state = {
 			contextMenu: { visible: false },
+			sessionView: { visible: false, sessions: [] },
 			displayByList: false
 		};
 
@@ -57,8 +58,18 @@ class ExplorerView extends Component {
 	}
   
 	buildFileItem(file) {
-		const { handleContextMenu, props: { folder, edit, requestFolder, refresh } } = this;
-		return <File folder={folder} file={file} edit={edit} requestFolder={requestFolder} refresh={refresh} handleContextMenu={handleContextMenu}/>
+		const { handleContextMenu, props: { folder, edit, requestFolder, refresh, updateSessionView } } = this;
+		return (
+			<File
+				folder={folder}
+				file={file}
+				edit={edit}
+				requestFolder={requestFolder}
+				refresh={refresh}
+				handleContextMenu={handleContextMenu}
+				updateSessionView={updateSessionView}
+			/>
+		);
 	}
 
 	toggleDisplay(displayByList) {
@@ -66,11 +77,14 @@ class ExplorerView extends Component {
 	}
 	
 	render() {
-		const { props: { editing, folder, tags, searchByTags }, state: { contextMenu, displayByList } } = this;
+		const {
+			props: { folder, tags, searchByTags },
+			state: { contextMenu, displayByList }
+		} = this;
 		const path = folder.path.concat(folder.active.name ? folder.active : []);
 
 		return (
-			<div id="explorer" className={`view ${editing ? 'editing' : ''}`}>
+			<div id="explorer" className="view">
 				<div id="explorerHeader" className="header">
 					<div id="searchByTags">
 						<TagInput tags={tags} onChange={searchByTags}/>

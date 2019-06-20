@@ -78,12 +78,12 @@ class Editor extends Component {
 	render() {
 		const { editor, closeEditor } = this.props;
 		return (
-			<div id="editor" className={`view ${editor.visible ? 'editing' : ''}`}>
+			<div id="editor" className={`view ${editor.visible ? 'visible' : ''}`}>
 				<div id="editorHeader" className="header">
 					<span className="ml-3">Éditer un QCM</span>
 					<div id="buttons" className="mr-3">
 						<Button color="primary" className="mr-2" onClick={this.save}>Enregistrer</Button>
-						<Button color="secondary" className="mr-2" onClick={closeEditor}>Annuler</Button>
+						<Button color="secondary" onClick={closeEditor}>Annuler</Button>
 					</div>
 				</div>
 

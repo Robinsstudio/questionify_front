@@ -2,7 +2,7 @@
 	position: absolute;
 	border: 1px #aaaaaa solid;
 	background-color: white;
-	z-index: 1000;
+	z-index: 1;
 }
 
 .menu > div {

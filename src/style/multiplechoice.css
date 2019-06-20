@@ -1,7 +1,13 @@
 .centerVertically {
+	position: absolute;
+	left: 0;
+	top: 0;
+	min-width: 100vw;
 	min-height: 100vh;
 	display: flex;
 	align-items: center;
+	background-color: white;
+	z-index: 1;
 }
 
 .answer {
