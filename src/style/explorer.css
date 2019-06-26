@@ -1,6 +1,6 @@
-#explorerHeader {
-	position: relative;
-	justify-content: space-between;
+#explorer {
+	flex: 1;
+	transition: flex .5s;
 }
 
 #path {
@@ -93,7 +93,6 @@
 	left: 50%;
 	transform: translateX(-50%);
 	width: 100%;
-	z-index: 100;
 	text-align: center;
 	white-space: nowrap;
 	overflow: hidden;
@@ -103,7 +102,6 @@
 .renaming .fileName {
 	width: auto;
 	overflow: visible;
-	z-index: 1000;
 }
 
 .list .fileName {

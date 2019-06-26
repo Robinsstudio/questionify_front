@@ -63,15 +63,24 @@ class File extends Component {
 	}
 
 	handleContextMenu(event) {
-		const { file: { name, type, url, _id }, refresh } = this.props;
+		const {
+			file: { name, type, url, sessions, _id },
+			refresh,
+			updateSessionView
+		} = this.props;
 
-		const multipleChoiceItem = url ? {
+		const sharedLinkItem = url ? {
 			label: 'Copier le lien partageable',
 			onClick: () => this.copyToClipboard(`${window.location.href}qcm/${url}`)
 		} : {
 			label: 'Générer un lien partageable',
 			onClick: () => request('/GenerateLink', { _id }).then(() => refresh())
 		};
+
+		const resultsItem = sessions && sessions.length ? {
+			label: 'Consulter les résultats',
+			onClick: () => updateSessionView({ visible: true, sessions })
+		} : [];
 
 		const menuItems = [
 			{ label: 'Ouvrir', onClick: this.open },
@@ -81,7 +90,9 @@ class File extends Component {
 				onClick: () => Modals.showConfirmModal('Supprimer', `Voulez-vous vraiment supprimer ${name} ?`)
 					.then(this.remove).catch(() => {})
 			}
-		].concat(type === 'qcm' ? multipleChoiceItem : []);
+		]
+		.concat(type === 'qcm' ? sharedLinkItem : [])
+		.concat(type === 'qcm' ? resultsItem : []);
 
 		this.props.handleContextMenu(event, menuItems);
 	}

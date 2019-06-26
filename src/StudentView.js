@@ -1,9 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import { InputGroup, InputGroupAddon, InputGroupText, Input, Button } from 'reactstrap';
-import request from './request';
+import { Input } from 'reactstrap';
+import MultipleChoiceView from './MultipleChoiceView';
 import Modals from './Modals';
-import CodeRenderer from './CodeRenderer';
-import ReactMarkdown from 'react-markdown';
+import request from './request';
 
 class StudentView extends Component {
 	constructor(props) {
@@ -14,17 +13,19 @@ class StudentView extends Component {
 				typingEnded: false
 			},
 			questions: [],
-			current: 0
+			current: 0,
+			editable: true
 		};
 
 		this.setName = this.setName.bind(this);
 		this.endTyping = this.endTyping.bind(this);
-		this.goBack = this.goBack.bind(this);
-		this.goNext = this.goNext.bind(this);
+		this.handleAnswersChanged = this.handleAnswersChanged.bind(this);
+		this.handleCurrentQuestionChanged = this.handleCurrentQuestionChanged.bind(this);
+		this.handleDone = this.handleDone.bind(this);
 
-		request('/GetMultipleChoice', { url: this.props.match.params.url }).then(res => res.json()).then(questions => {
-			this.setState({ questions });
-		});
+		request('/GetMultipleChoice', { url: this.props.match.params.url })
+		.then(res => res.json())
+		.then(questions => this.setState({ questions }));
 	}
 
 	setName(event) {
@@ -39,50 +40,32 @@ class StudentView extends Component {
 		}
 	}
 
-	setChecked(index) {
-		const { questions, current } = this.state;
-		const updatedQuestions = questions.slice();
-
-		updatedQuestions[current].answers.forEach((answer, i) => {
-			if (i === index) {
-				answer.checked = !answer.checked;
-			}
-		});
-
-		this.setState({ questions: updatedQuestions });
+	handleAnswersChanged(questions) {
+		this.setState({ questions });
 	}
 
-	goBack() {
-		const previous = this.state.current - 1;
-
-		if (previous >= 0) {
-			this.setState({ current: previous });
-		}
+	handleCurrentQuestionChanged(current) {
+		this.setState({ current });
 	}
 
-	goNext() {
+	handleDone() {
 		const { url } = this.props.match.params;
-		const { questions, current } = this.state;
-		const next = current + 1;
+		const { questions, name } = this.state;
 
-		if (next < questions.length) {
-			this.setState({ current: next });
-		} else {
-			Modals.showConfirmModal('Confirmation des réponses',
+		Modals.showConfirmModal('Confirmation des réponses',
 				'En cliquant sur "Terminé", '
 				+ 'vous validez l\'ensemble de vos réponses. Confirmez-vous votre choix ?')
-			.then(() => {
-				return request('/SaveSession', {
-					url,
-					session: {
-						name: this.state.name.value,
-						questions
-					}
-				})
-				.then(res => res.json())
-				.then(questions => this.setState({ questions, current: 0, ended: true }));
-			}, () => {});
-		}
+		.then(() => {
+			return request('/SaveSession', {
+				url,
+				session: {
+					name: name.value,
+					questions
+				}
+			})
+			.then(res => res.json())
+			.then(questions => this.setState({ questions, current: 0, editable: false }));
+		}, () => {});
 	}
 
 	buildNameInput() {
@@ -102,70 +85,8 @@ class StudentView extends Component {
 		);
 	}
 
-	buildTextNextButton() {
-		const { questions, current } = this.state;
-
-		if (current < questions.length - 1) {
-			return (
-				<Fragment>
-					Suivant
-					<i className="fas fa-arrow-right ml-3"/>
-				</Fragment>
-			);
-		}
-
-		return (
-			<Fragment>
-				Terminé
-				<i className="fas fa-check ml-3"/>
-			</Fragment>
-		);
-	}
-
-	buildCurrentQuestion() {
-		const { questions, current, ended } = this.state;
-
-		if (questions.length) {
-			const question = questions[current];
-			return (
-				<Fragment>
-					<ReactMarkdown source={question.label} renderers={{ code: CodeRenderer }}/>
-					{ question.answers.map((answer, index) => {
-
-						const { checked, correct, label } = answer;
-						const className = correct ? 'correct' : correct === false && checked ? 'incorrect' : '';
-
-						return (
-							<InputGroup className="mb-3">
-								<InputGroupAddon addonType="prepend">
-									<InputGroupText onClick={() => this.setChecked(index)}>
-										<Input addon type="checkbox" checked={answer.checked = !!checked} readOnly/>
-									</InputGroupText>
-								</InputGroupAddon>
-								<div className={`${className} answer form-control mr-3`} spellCheck="false">{label}</div>
-							</InputGroup>
-						);
-					}) }
-					<div className="row justify-content-around">
-						<Button color="primary" className="mt-3 mb-3" onClick={this.goBack}>
-							<i className="fas fa-arrow-left mr-3"/>
-							Précédent
-						</Button>
-
-						{(!ended || current < questions.length - 1) &&
-						<Button color="primary" className="mt-3 mb-3" onClick={this.goNext}>
-							{ this.buildTextNextButton() }
-						</Button>}
-					</div>
-				</Fragment>
-			);
-		}
-
-		return null;
-	}
-
 	render() {
-		const { typingEnded  } = this.state.name;
+		const { questions, current, editable, name: { typingEnded } } = this.state;
 
 		const columns = typingEnded ? 8 : 6;
 
@@ -174,7 +95,16 @@ class StudentView extends Component {
 				<div className="container">
 					<div className="row justify-content-center mt-3">
 						<div className={`col-md-${columns} col-xs-12`}>
-							{ typingEnded ? this.buildCurrentQuestion() : this.buildNameInput() }
+							{ typingEnded ?
+								<MultipleChoiceView
+									questions={questions}
+									current={current}
+									editable={editable}
+									onAnswersChanged={this.handleAnswersChanged}
+									onCurrentQuestionChanged={this.handleCurrentQuestionChanged}
+									onDone={editable ? this.handleDone : null}
+								/> : this.buildNameInput()
+							}
 						</div>
 					</div>
 				</div>
