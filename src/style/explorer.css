@@ -102,6 +102,7 @@
 .renaming .fileName {
 	width: auto;
 	overflow: visible;
+	z-index: 1;
 }
 
 .list .fileName {
