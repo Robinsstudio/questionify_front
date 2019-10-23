@@ -101,9 +101,7 @@ class File extends Component {
 
 	handleDragStart(event) {
 		const { file } = this.props;
-		if (file.type === 'question') {
-			event.dataTransfer.setData('question', JSON.stringify(file));
-		}
+		event.dataTransfer.setData(file.type, JSON.stringify(file));
 	}
 
 	render() {

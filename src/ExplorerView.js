@@ -99,6 +99,26 @@ class ExplorerView extends Component {
 	toggleDisplay(displayByList) {
 		this.setState({ displayByList });
 	}
+
+	handleDragOver(event) {
+		event.target.classList.add('dropZone');
+		event.preventDefault();
+	}
+
+	handleDragLeave(event) {
+		event.target.classList.remove('dropZone');
+	}
+
+	handleDrop(event, _id) {
+		const { refresh } = this.props;
+		['folder', 'question', 'qcm'].forEach(type => {
+			if (event.dataTransfer.types.includes(type)) {
+				const file = JSON.parse(event.dataTransfer.getData(type));
+				request('Move', { _id: file._id, idParent: _id }).then(() => refresh());
+			}
+		});
+		event.target.classList.remove('dropZone');
+	}
 	
 	render() {
 		const {
@@ -117,7 +137,12 @@ class ExplorerView extends Component {
 					<div id="path">
 						{[].concat(...[{ name: 'Explorer' }, ...path].map(folder => {
 							return [
-								<span onClick={() => this.goBack(folder._id)}>{folder.name}</span>,
+								<span
+									onClick={() => this.goBack(folder._id)}
+									onDragOver={this.handleDragOver}
+									onDragLeave={this.handleDragLeave}
+									onDrop={e => this.handleDrop(e, folder._id)}
+								>{folder.name}</span>,
 								<div className="arrow"/>
 							]
 						})).slice(0, -1)}
