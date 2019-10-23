@@ -17,6 +17,7 @@ class ExplorerView extends Component {
 
 		this.createFolder = this.createFolder.bind(this);
 		this.copyFile = this.copyFile.bind(this);
+		this.dropFile = this.dropFile.bind(this);
 		this.pasteFile = this.pasteFile.bind(this);
 		this.handleContextMenu = this.handleContextMenu.bind(this);
 		this.hideContextMenu = this.hideContextMenu.bind(this);
@@ -40,6 +41,16 @@ class ExplorerView extends Component {
 	pasteFile() {
 		const { props: { folder: { active: { _id } }, refresh }, state: { copiedFile } } = this;
 		request('Paste', { _id: copiedFile, idParent: _id }).then(() => refresh());
+	}
+
+	dropFile(event, _id) {
+		const { refresh } = this.props;
+		['folder', 'question', 'qcm'].forEach(type => {
+			if (event.dataTransfer.types.includes(type)) {
+				const file = JSON.parse(event.dataTransfer.getData(type));
+				request('Move', { _id: file._id, idParent: _id }).then(() => refresh());
+			}
+		});
 	}
 
 	handleContextMenu(event, items = []) {
@@ -71,23 +82,14 @@ class ExplorerView extends Component {
 	}
   
 	buildFileItem(file) {
-		const {
-			handleContextMenu,
-			props: {
-				folder,
-				edit,
-				requestFolder,
-				refresh,
-				updateSessionView
-			}
-		} = this;
-
+		const { handleContextMenu, props: { folder, edit, requestFolder, refresh, updateSessionView } } = this;
 		return (
 			<File
 				folder={folder}
 				file={file}
 				edit={edit}
 				copyFile={this.copyFile}
+				dropFile={this.dropFile}
 				requestFolder={requestFolder}
 				refresh={refresh}
 				handleContextMenu={handleContextMenu}
@@ -110,13 +112,7 @@ class ExplorerView extends Component {
 	}
 
 	handleDrop(event, _id) {
-		const { refresh } = this.props;
-		['folder', 'question', 'qcm'].forEach(type => {
-			if (event.dataTransfer.types.includes(type)) {
-				const file = JSON.parse(event.dataTransfer.getData(type));
-				request('Move', { _id: file._id, idParent: _id }).then(() => refresh());
-			}
-		});
+		this.dropFile(event, _id);
 		event.target.classList.remove('dropZone');
 	}
 	

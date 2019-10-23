@@ -69,6 +69,12 @@
 .folder, .question, .qcm {
 	width: 100px;
 	height: 100px;
+	transition: transform .2s ease-in-out;
+}
+
+.folder.grow {
+	transform: scale(1.2);
+	transition: transform .2s ease-in-out;
 }
 
 .list .folder, .list .question, .list .qcm {
