@@ -11,10 +11,13 @@ class ExplorerView extends Component {
 		this.state = {
 			contextMenu: { visible: false },
 			sessionView: { visible: false, sessions: [] },
-			displayByList: false
+			displayByList: false,
+			copiedFile: null
 		};
 
 		this.createFolder = this.createFolder.bind(this);
+		this.copyFile = this.copyFile.bind(this);
+		this.pasteFile = this.pasteFile.bind(this);
 		this.handleContextMenu = this.handleContextMenu.bind(this);
 		this.hideContextMenu = this.hideContextMenu.bind(this);
 		
@@ -30,6 +33,15 @@ class ExplorerView extends Component {
 		this.props.requestFolder(_id);
 	}
 
+	copyFile(_id) {
+		this.setState({ copiedFile: _id });
+	}
+
+	pasteFile() {
+		const { props: { folder: { active: { _id } }, refresh }, state: { copiedFile } } = this;
+		request('Paste', { _id: copiedFile, idParent: _id }).then(() => refresh());
+	}
+
 	handleContextMenu(event, items = []) {
 		const { pageX, pageY, screenX, screenY } = event;
 		const x = screenX - window.screenX;
@@ -43,6 +55,7 @@ class ExplorerView extends Component {
 	buildMenuItems(items) {
 		const { create, folder, refresh } = this.props;
 		return items.concat(
+			{ label: 'Coller', onClick: this.pasteFile },
 			{ label: 'Nouveau dossier', onClick: () => {
 				Modals.showPromptModal('Nouveau dossier', 'Entrez un nom de dossier ici...').then(name => this.createFolder(name)).catch(() => {});
 			}},
@@ -58,12 +71,23 @@ class ExplorerView extends Component {
 	}
   
 	buildFileItem(file) {
-		const { handleContextMenu, props: { folder, edit, requestFolder, refresh, updateSessionView } } = this;
+		const {
+			handleContextMenu,
+			props: {
+				folder,
+				edit,
+				requestFolder,
+				refresh,
+				updateSessionView
+			}
+		} = this;
+
 		return (
 			<File
 				folder={folder}
 				file={file}
 				edit={edit}
+				copyFile={this.copyFile}
 				requestFolder={requestFolder}
 				refresh={refresh}
 				handleContextMenu={handleContextMenu}

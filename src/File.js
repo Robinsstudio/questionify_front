@@ -65,6 +65,7 @@ class File extends Component {
 	handleContextMenu(event) {
 		const {
 			file: { name, type, url, sessions, _id },
+			copyFile,
 			refresh,
 			updateSessionView
 		} = this.props;
@@ -89,7 +90,8 @@ class File extends Component {
 				label: 'Supprimer',
 				onClick: () => Modals.showConfirmModal('Supprimer', `Voulez-vous vraiment supprimer ${name} ?`)
 					.then(this.remove).catch(() => {})
-			}
+			},
+			{ label: 'Copier', onClick: () => copyFile(_id) }
 		]
 		.concat(type === 'qcm' ? sharedLinkItem : [])
 		.concat(type === 'qcm' ? resultsItem : []);
