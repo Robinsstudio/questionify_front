@@ -11,10 +11,14 @@ class ExplorerView extends Component {
 		this.state = {
 			contextMenu: { visible: false },
 			sessionView: { visible: false, sessions: [] },
-			displayByList: false
+			displayByList: false,
+			copiedFile: null
 		};
 
 		this.createFolder = this.createFolder.bind(this);
+		this.copyFile = this.copyFile.bind(this);
+		this.dropFile = this.dropFile.bind(this);
+		this.pasteFile = this.pasteFile.bind(this);
 		this.handleContextMenu = this.handleContextMenu.bind(this);
 		this.hideContextMenu = this.hideContextMenu.bind(this);
 		
@@ -30,6 +34,25 @@ class ExplorerView extends Component {
 		this.props.requestFolder(_id);
 	}
 
+	copyFile(_id) {
+		this.setState({ copiedFile: _id });
+	}
+
+	pasteFile() {
+		const { props: { folder: { active: { _id } }, refresh }, state: { copiedFile } } = this;
+		request('Paste', { _id: copiedFile, idParent: _id }).then(() => refresh());
+	}
+
+	dropFile(event, _id) {
+		const { refresh } = this.props;
+		['folder', 'question', 'qcm'].forEach(type => {
+			if (event.dataTransfer.types.includes(type)) {
+				const file = JSON.parse(event.dataTransfer.getData(type));
+				request('Move', { _id: file._id, idParent: _id }).then(() => refresh());
+			}
+		});
+	}
+
 	handleContextMenu(event, items = []) {
 		const { pageX, pageY, screenX, screenY } = event;
 		const x = screenX - window.screenX;
@@ -43,6 +66,7 @@ class ExplorerView extends Component {
 	buildMenuItems(items) {
 		const { create, folder, refresh } = this.props;
 		return items.concat(
+			{ label: 'Coller', onClick: this.pasteFile },
 			{ label: 'Nouveau dossier', onClick: () => {
 				Modals.showPromptModal('Nouveau dossier', 'Entrez un nom de dossier ici...').then(name => this.createFolder(name)).catch(() => {});
 			}},
@@ -64,6 +88,8 @@ class ExplorerView extends Component {
 				folder={folder}
 				file={file}
 				edit={edit}
+				copyFile={this.copyFile}
+				dropFile={this.dropFile}
 				requestFolder={requestFolder}
 				refresh={refresh}
 				handleContextMenu={handleContextMenu}
@@ -74,6 +100,20 @@ class ExplorerView extends Component {
 
 	toggleDisplay(displayByList) {
 		this.setState({ displayByList });
+	}
+
+	handleDragOver(event) {
+		event.target.classList.add('dropZone');
+		event.preventDefault();
+	}
+
+	handleDragLeave(event) {
+		event.target.classList.remove('dropZone');
+	}
+
+	handleDrop(event, _id) {
+		this.dropFile(event, _id);
+		event.target.classList.remove('dropZone');
 	}
 	
 	render() {
@@ -93,7 +133,12 @@ class ExplorerView extends Component {
 					<div id="path">
 						{[].concat(...[{ name: 'Explorer' }, ...path].map(folder => {
 							return [
-								<span onClick={() => this.goBack(folder._id)}>{folder.name}</span>,
+								<span
+									onClick={() => this.goBack(folder._id)}
+									onDragOver={this.handleDragOver}
+									onDragLeave={this.handleDragLeave}
+									onDrop={e => this.handleDrop(e, folder._id)}
+								>{folder.name}</span>,
 								<div className="arrow"/>
 							]
 						})).slice(0, -1)}

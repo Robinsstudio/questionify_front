@@ -6,7 +6,10 @@ import request from './request';
 class File extends Component {
 	constructor(props) {
 		super(props);
-		this.state = { renaming: false };
+		this.state = {
+			renaming: false,
+			dragging: false
+		};
 
 		this.open = this.open.bind(this);
 		this.rename = this.rename.bind(this);
@@ -15,6 +18,10 @@ class File extends Component {
 		this.stopRenaming = this.stopRenaming.bind(this);
 		this.handleContextMenu = this.handleContextMenu.bind(this);
 		this.handleDragStart = this.handleDragStart.bind(this);
+		this.handleDragEnd = this.handleDragEnd.bind(this);
+		this.handleDragOver = this.handleDragOver.bind(this);
+		this.handleDragLeave = this.handleDragLeave.bind(this);
+		this.handleDrop = this.handleDrop.bind(this);
 	}
 
 	open() {
@@ -65,6 +72,7 @@ class File extends Component {
 	handleContextMenu(event) {
 		const {
 			file: { name, type, url, sessions, _id },
+			copyFile,
 			refresh,
 			updateSessionView
 		} = this.props;
@@ -89,7 +97,8 @@ class File extends Component {
 				label: 'Supprimer',
 				onClick: () => Modals.showConfirmModal('Supprimer', `Voulez-vous vraiment supprimer ${name} ?`)
 					.then(this.remove).catch(() => {})
-			}
+			},
+			{ label: 'Copier', onClick: () => copyFile(_id) }
 		]
 		.concat(type === 'qcm' ? sharedLinkItem : [])
 		.concat(type === 'qcm' ? resultsItem : []);
@@ -99,15 +108,53 @@ class File extends Component {
 
 	handleDragStart(event) {
 		const { file } = this.props;
-		if (file.type === 'question') {
-			event.dataTransfer.setData('question', JSON.stringify(file));
+		event.dataTransfer.setData(file.type, JSON.stringify(file));
+		this.setState({ dragging: true });
+	}
+
+	handleDragEnd() {
+		this.setState({ dragging: false });
+	}
+
+	handleDragOver(event) {
+		const { dragging } = this.state;
+		const element = event.target;
+		if (!dragging && element.classList.contains('folder')) {
+			element.classList.add('grow');
+		}
+		event.preventDefault();
+	}
+
+	handleDragLeave(event) {
+		const element = event.target;
+		element.classList.remove('grow');
+	}
+
+	handleDrop(event) {
+		const { props: { file: { _id }, dropFile }, state: { dragging } } = this;
+		const element = event.target;
+
+		if (!dragging && element.classList.contains('folder')) {
+			dropFile(event, _id);
+			element.classList.remove('grow');
 		}
 	}
 
 	render() {
 		const { props: { file: { type, name } }, state: { renaming } } = this;
+
 		return (
-			<div className={`file ${renaming ? 'renaming' : ''}`} onDoubleClick={this.open} onContextMenu={this.handleContextMenu} onDragStart={this.handleDragStart} draggable>
+			<div
+				className={`file ${renaming ? 'renaming' : ''}`}
+				onDoubleClick={this.open}
+				onContextMenu={this.handleContextMenu}
+				onDragStart={this.handleDragStart}
+				onDragEnd={this.handleDragEnd}
+				onDragOver={this.handleDragOver}
+				onDragLeave={this.handleDragLeave}
+				onDrop={this.handleDrop}
+				draggable
+			>
 				<div className={type}/>
 				<div className="fileName">
 					{(renaming) ? <AutoFocusInput value={name} onStopEditing={this.stopRenaming}/> : name}
